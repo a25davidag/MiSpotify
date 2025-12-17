@@ -1,0 +1,147 @@
+/* ===== Estilos generales ===== */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #fff;
+}
+
+h1, h2, h3 {
+    color: #1DB954; /* color verde tipo Spotify */
+    margin-bottom: 10px;
+}
+
+/* ===== Login ===== */
+#login-section {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #000;
+}
+
+#login-section input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+#login-section button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: #1DB954;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#login-section button:hover {
+    background-color: #1ed760cc;
+}
+
+#login-message {
+    margin-top: 10px;
+    color: #ff6b6b;
+}
+
+/* ===== Playlists ===== */
+#playlists-section {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+}
+
+#playlists-section input {
+    padding: 10px;
+    width: calc(100% - 130px);
+    margin-right: 10px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+#playlists-section button {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    background-color: #1DB954;
+    color: white;
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    padding: 8px;
+    margin: 5px 0;
+    background-color: #2a2a2a;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+li:hover {
+    background-color: #1DB95444;
+}
+
+/* ===== Canciones y reproductor ===== */
+#songs-section {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+}
+
+#songs-section ul li {
+    display: flex;
+    justify-content: space-between;
+}
+
+audio {
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 5px;
+}
+/* Diferenciar inputs de login y registro */
+#login-section input {
+    background-color: #2a2a2a;
+    color: #fff;
+}
+
+/* Botones de acciones de playlists y canciones */
+#playlists-section button, #songs-section button {
+    background-color: #1ed760;
+    color: #121212;
+    font-weight: bold;
+}
+
+#playlists-section button:hover, #songs-section button:hover {
+    background-color: #1DB954;
+}
+#progress-container {
+    width: 100%;
+    height: 10px;
+    background-color: #2a2a2a;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #1DB954;
+    border-radius: 5px;
+}
