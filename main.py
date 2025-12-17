@@ -1,33 +1,27 @@
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import os
 
 from login import Login
-from user_model import User
-from playlist import PlayList
+from user import User
 from song import Song
 from genre import Genre
 
 app = FastAPI()
 login_service = Login()
 
-# Directorios
 MEDIA_DIR = "./media/"
 TEMPLATES_DIR = "./templates"
 STATIC_DIR = "./static"
 
-# Montar carpetas estáticas y plantillas
 app.mount("/media", StaticFiles(directory=MEDIA_DIR), name="media")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
-# Simulación de usuarios en memoria
-users_dict = {}  # username -> User instance
+users_dict = {}
 
-# Simulación de canciones globales
 songs = [
          Song("99999999-Acid Blood", "3:31", "2020-16-12", Genre.TECHNO),
          Song("Aitana-Los Angeles", "2:38", "2024-01-04", Genre.POP),
@@ -78,7 +72,6 @@ def login_page(request: Request):
 
 @app.get("/register")
 def register_page(request: Request):
-    """Página de registro"""
     return templates.TemplateResponse("spotify.html", {"request": request, "mode": "register"})
 
 
@@ -101,7 +94,6 @@ def login(user: UserLogin):
 
 @app.get("/songs")
 def get_all_songs():
-    """Devuelve la lista de canciones disponibles en la carpeta media"""
     try:
         # Listar todos los archivos mp3 en la carpeta MEDIA_DIR
         songs_list = [f[:-4] for f in os.listdir(MEDIA_DIR) if f.endswith(".mp3")]

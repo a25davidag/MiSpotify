@@ -1,7 +1,7 @@
 # login.py
 import os
 import hashlib
-from user_model import User
+from user import User
 
 USERS_FILE_PATH = "./login/users.txt"
 
