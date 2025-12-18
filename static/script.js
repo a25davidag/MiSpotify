@@ -51,10 +51,14 @@ async function register() {
 }
 
 async function showSongs() {
+    if(!currentUser){
+    alert("Debes iniciar sesion primero")
+    return;
+    }
     document.getElementById("dashboard-section").style.display = "none";
     document.getElementById("songs-section").style.display = "block";
 
-    const response = await fetch("/songs");
+    const response = await fetch("/songs?username=${currenUser}");
     const data = await response.json();
 
     currentSongs = data.songs;

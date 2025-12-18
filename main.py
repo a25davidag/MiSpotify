@@ -56,7 +56,6 @@ songs = [
          Song("Whitney Houston-Its not right but its ok","2:32","2005-02-14",Genre.TECHNO)
 ]
 
-# Pydantic models
 class UserCreate(BaseModel):
     username: str
     password: str
@@ -65,7 +64,7 @@ class UserLogin(BaseModel):
     username: str
     password: str
 
-# Endpoints
+
 @app.get("/")
 def login_page(request: Request):
     return templates.TemplateResponse("spotify.html", {"request": request,"mode":"login"})
@@ -86,16 +85,19 @@ def register(user: UserCreate):
 
 @app.post("/login")
 def login(user: UserLogin):
+    if not(user.username or not user.password):
+        raise HTTPException(status_code=400, detail="El usuario y contraseña requerido")
     result = login_service.login_user(user.username, user.password)
     if result:
         return {"success": True, "message": f"Bienvenido {user.username}"}
-    return {"success": False, "message": "Usuario o contraseña incorrectos"}
+    raise HTTPException(status_code=401, detail="El usuario o contraseña incorrectos")
 
 
 @app.get("/songs")
-def get_all_songs():
+def get_all_songs(username: str = None):
+    if not username or username not in users_dict:
+        raise HTTPException(status_code=401, detail="Debes iniciar sesion para ver las canciones ")
     try:
-        # Listar todos los archivos mp3 en la carpeta MEDIA_DIR
         songs_list = [f[:-4] for f in os.listdir(MEDIA_DIR) if f.endswith(".mp3")]
         return {"songs": songs_list}
     except FileNotFoundError:
