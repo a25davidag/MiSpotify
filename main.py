@@ -96,9 +96,9 @@ def login(user: UserLogin):
 @app.get("/songs")
 def get_all_songs(username: str = None):
     if not username or username not in users_dict:
-        raise HTTPException(status_code=401, detail="Debes iniciar sesion para ver las canciones ")
+        raise HTTPException(status_code=401, detail="Debes iniciar sesión para ver las canciones")
     try:
-        songs_list = [f[:-4] for f in os.listdir(MEDIA_DIR) if f.endswith(".mp3")]
+        songs_list = [song.name for song in songs]
         return {"songs": songs_list}
-    except FileNotFoundError:
+    except Exception:
         return {"songs": []}

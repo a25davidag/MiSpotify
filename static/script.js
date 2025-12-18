@@ -5,9 +5,15 @@ let currentSongIndex = 0;
 const audioPlayer = document.getElementById("audio-player");
 
 async function login() {
-    const username = document.getElementById("login-username").value;
-    const password = document.getElementById("login-password").value;
+    const username = document.getElementById("login-username").value.trim();
+    const password = document.getElementById("login-password").value.trim();
     const messageDiv = document.getElementById("login-message");
+
+    if (!username || !password) {
+        messageDiv.style.color = "#ff6b6b";
+        messageDiv.textContent = "Debes introducir usuario y contraseña antes de entrar";
+        return;
+    }
 
     const response = await fetch("/login", {
         method: "POST",
@@ -29,9 +35,15 @@ async function login() {
 }
 
 async function register() {
-    const username = document.getElementById("register-username").value;
-    const password = document.getElementById("register-password").value;
+    const username = document.getElementById("register-username").value.trim();
+    const password = document.getElementById("register-password").value.trim();
     const messageDiv = document.getElementById("register-message");
+
+    if (!username || !password) {
+        messageDiv.style.color = "#ff6b6b";
+        messageDiv.textContent = "Debes introducir usuario y contraseña para registrarte";
+        return;
+    }
 
     const response = await fetch("/register", {
         method: "POST",
@@ -51,14 +63,15 @@ async function register() {
 }
 
 async function showSongs() {
-    if(!currentUser){
-    alert("Debes iniciar sesion primero")
-    return;
+    if (!currentUser) {
+        alert("Debes iniciar sesión primero");
+        return;
     }
+
     document.getElementById("dashboard-section").style.display = "none";
     document.getElementById("songs-section").style.display = "block";
 
-    const response = await fetch("/songs?username=${currenUser}");
+    const response = await fetch(`/songs?username=${currentUser}`);
     const data = await response.json();
 
     currentSongs = data.songs;
@@ -70,7 +83,6 @@ async function showSongs() {
 function backToDashboard() {
     document.getElementById("songs-section").style.display = "none";
     document.getElementById("dashboard-section").style.display = "block";
-
     audioPlayer.pause();
 }
 
@@ -103,6 +115,7 @@ function renderSongList() {
         list.appendChild(li);
     });
 }
+
 function siguienteCancion() {
     if (currentSongs.length === 0) return;
 
@@ -120,5 +133,5 @@ function anteriorCancion() {
     if (currentSongIndex < 0) {
         currentSongIndex = currentSongs.length - 1;
     }
-    playSong(currentSongs[currentSongIndex])
+    playSong(currentSongs[currentSongIndex]);
 }

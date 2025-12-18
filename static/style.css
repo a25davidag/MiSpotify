@@ -2,6 +2,13 @@ body {
     font-family: Arial, sans-serif;
     background-color: black;
     color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
 }
 #encabezado {
     background: linear-gradient(135deg, #121212, #1DB95422); /* oscuro + verde suave */
@@ -17,8 +24,9 @@ h1, h2 {
     color: #1DB954;
 }
 
-#login-section, #register-section, #songs-section {
+#login-section, #register-section, #dashboard-section, #songs-section {
     max-width: 400px;
+    width: 90%;
     margin: 40px auto;
     padding: 20px;
     background-color: #1e1e1e;
