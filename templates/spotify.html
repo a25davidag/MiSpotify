@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mini Spotify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -12,25 +13,25 @@
 </section>
 
 {% if mode == "login" %}
-<div id="login-section">
+<div id="login-section" class="seccion-auth desvanecer visible">
     <h2>Iniciar sesión</h2>
     <input type="text" id="login-username" placeholder="Usuario">
     <input type="password" id="login-password" placeholder="Contraseña">
     <button onclick="login()">Entrar</button>
 
-    <p id="login-message"></p>
-    <p>¿No tienes cuenta? Regístrate <a href="/register">Aquí</a></p>
+    <p id="login-message" class="mensaje"></p>
+    <p>¿No tienes cuenta? Regístrate <a href="/register" onclick="cambiarARegistro()">Aquí</a></p>
 </div>
 
 {% elif mode == "register" %}
-<div id="register-section">
+<div id="register-section" class="seccion-auth desvanecer">
     <h2>Registrar usuario</h2>
     <input type="text" id="register-username" placeholder="Usuario">
     <input type="password" id="register-password" placeholder="Contraseña">
     <button onclick="register()">Registrar</button>
 
-    <p id="register-message"></p>
-    <p>¿Ya tienes cuenta? Inicia sesión <a href="/">Aquí</a></p>
+    <p id="register-message" class="mensaje"></p>
+    <p>¿Ya tienes cuenta? Inicia sesión <a href="/" onclick="cambiarALogin()">Aquí</a></p>
 </div>
 {% endif %}
 

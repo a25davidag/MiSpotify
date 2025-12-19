@@ -20,7 +20,6 @@ app.mount("/media", StaticFiles(directory=MEDIA_DIR), name="media")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
-users_dict = {}
 
 songs = [
          Song("99999999-Acid Blood", "3:31", "2020-16-12", Genre.TECHNO),
@@ -76,16 +75,14 @@ def register_page(request: Request):
 
 @app.post("/register")
 def register(user: UserCreate):
-    if user.username in users_dict:
+    if any(u.username == user.username for u in login_service.users):
         raise HTTPException(status_code=400, detail="El usuario ya existe")
     login_service.create_new_user(user.username, user.password)
-    new_user = User(user.username, user.password)
-    users_dict[user.username] = new_user
     return {"success": True, "message": f"Usuario '{user.username}' registrado correctamente"}
 
 @app.post("/login")
 def login(user: UserLogin):
-    if not(user.username or not user.password):
+    if not (user.username or not user.password):
         raise HTTPException(status_code=400, detail="El usuario y contraseña requerido")
     result = login_service.login_user(user.username, user.password)
     if result:
@@ -95,8 +92,8 @@ def login(user: UserLogin):
 
 @app.get("/songs")
 def get_all_songs(username: str = None):
-    if not username or username not in users_dict:
-        raise HTTPException(status_code=401, detail="Debes iniciar sesión para ver las canciones")
+    if not username or not any(u.username == username for u in login_service.users):
+        raise HTTPException(status_code=401, detail="Debes iniciar sesión para ver las canciones:)")
     try:
         songs_list = [song.name for song in songs]
         return {"songs": songs_list}

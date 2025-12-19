@@ -15,22 +15,28 @@ async function login() {
         return;
     }
 
-    const response = await fetch("/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-    });
+    try {
+        const response = await fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (data.success) {
-        currentUser = username;
-        document.getElementById("login-section").style.display = "none";
-        document.getElementById("dashboard-section").style.display = "block";
-        document.getElementById("current-user").textContent = currentUser;
-    } else {
+        if (response.ok && data.success) {
+            currentUser = username;
+            document.getElementById("login-section").style.display = "none";
+            document.getElementById("dashboard-section").style.display = "block";
+            document.getElementById("current-user").textContent = currentUser;
+        } else {
+            messageDiv.style.color = "#ff6b6b";
+            messageDiv.textContent = data.detail || "Usuario o contraseña incorrectos";
+        }
+    } catch (error) {
+        console.error(error);
         messageDiv.style.color = "#ff6b6b";
-        messageDiv.textContent = data.message;
+        messageDiv.textContent = "Error en el servidor";
     }
 }
 
@@ -45,20 +51,26 @@ async function register() {
         return;
     }
 
-    const response = await fetch("/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-    });
+    try {
+        const response = await fetch("/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (response.ok) {
-        messageDiv.style.color = "#1DB954";
-        messageDiv.textContent = `Usuario '${username}' registrado con éxito. Ahora inicia sesión.`;
-    } else {
+        if (response.ok) {
+            messageDiv.style.color = "#1DB954";
+            messageDiv.textContent = `Usuario '${username}' registrado con éxito. Ahora inicia sesión.`;
+        } else {
+            messageDiv.style.color = "#ff6b6b";
+            messageDiv.textContent = data.detail || "Error al registrar usuario";
+        }
+    } catch (error) {
+        console.error(error);
         messageDiv.style.color = "#ff6b6b";
-        messageDiv.textContent = data.detail || "Error al registrar usuario";
+        messageDiv.textContent = "Error en el servidor";
     }
 }
 
@@ -71,13 +83,18 @@ async function showSongs() {
     document.getElementById("dashboard-section").style.display = "none";
     document.getElementById("songs-section").style.display = "block";
 
-    const response = await fetch(`/songs?username=${currentUser}`);
-    const data = await response.json();
+    try {
+        const response = await fetch(`/songs?username=${currentUser}`);
+        const data = await response.json();
 
-    currentSongs = data.songs;
-    currentSongIndex = 0;
+        currentSongs = data.songs || [];
+        currentSongIndex = 0;
 
-    renderSongList();
+        renderSongList();
+    } catch (error) {
+        console.error(error);
+        alert("Error al cargar las canciones");
+    }
 }
 
 function backToDashboard() {

@@ -10,21 +10,29 @@ body {
     justify-content: center;
     min-height: 100vh;
 }
+
 #encabezado {
-    background: linear-gradient(135deg, #121212, #1DB95422); /* oscuro + verde suave */
-    color: #1DB954;
+    width: 100%;
+    background: linear-gradient(135deg, #121212, #1DB95433);
+    color: #fff;
     text-align: center;
-    padding: 1px 0;
-    font-size: 1.08rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    padding: 50px 0;
+    font-size: 2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
 }
 
+#encabezado h1 {
+    color: #1DB954;
+    font-size: 3rem;
+    margin: 0;
+    text-shadow: 0 0 10px #1DB95477;
+}
 
 h1, h2 {
     color: #1DB954;
 }
 
-#login-section, #register-section, #dashboard-section, #songs-section {
+#seccion-login, #seccion-registro, #seccion-dashboard, #seccion-canciones {
     max-width: 400px;
     width: 90%;
     margin: 40px auto;
@@ -33,14 +41,14 @@ h1, h2 {
     border-radius: 10px;
     text-align: center;
 }
-#login-section a, #register-section a {
+
+#seccion-login a, #seccion-registro a {
     color: #1DB954;
     text-decoration: none;
     font-weight: bold;
     cursor: pointer;
     transition: color 0.3s;
 }
-
 
 input {
     width: 100%;
@@ -77,4 +85,12 @@ li {
 audio {
     width: 100%;
     margin-top: 15px;
+}
+@media (max-width: 400px) {
+    #encabezado {
+        padding: 8vh 0;
+    }
+    #encabezado h1 {
+        font-size: clamp(1.5rem, 6vw, 2.5rem);
+    }
 }
