@@ -1,13 +1,13 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: black;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(180deg, #121212 0%, #000000 100%);
     color: #fff;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 100vh;
 }
 
@@ -16,81 +16,111 @@ body {
     background: linear-gradient(135deg, #121212, #1DB95433);
     color: #fff;
     text-align: center;
-    padding: 50px 0;
-    font-size: 2rem;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+    padding: 60px 0;
+    font-size: 2.2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
 }
 
 #encabezado h1 {
     color: #1DB954;
-    font-size: 3rem;
+    font-size: 3.5rem;
     margin: 0;
-    text-shadow: 0 0 10px #1DB95477;
+    text-shadow: 0 0 15px #1DB954aa;
 }
 
 h1, h2 {
     color: #1DB954;
-}
-
-#seccion-login, #seccion-registro, #seccion-dashboard, #seccion-canciones {
-    max-width: 400px;
-    width: 90%;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: #1e1e1e;
-    border-radius: 10px;
     text-align: center;
 }
 
-#seccion-login a, #seccion-registro a {
-    color: #1DB954;
-    text-decoration: none;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s;
+.seccion-auth, #dashboard-section, #songs-section {
+    max-width: 500px;
+    width: 90%;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #1e1e1e;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
 }
 
 input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
+    width: 90%;
+    padding: 12px;
+    margin: 12px 0;
     background-color: #2a2a2a;
     color: #fff;
-    border: none;
-    border-radius: 5px;
+    border: 1px solid #1DB954;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #1ed760;
+    outline: none;
+    box-shadow: 0 0 8px #1ed76055;
 }
 
 button {
-    padding: 10px 15px;
+    padding: 12px 25px;
+    margin: 8px 5px;
     background-color: #1DB954;
-    color: #121212;
+    color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 25px;
     cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #1ed760;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(30, 215, 96, 0.5);
 }
 
 ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 li {
-    padding: 8px;
+    padding: 12px;
     background-color: #2a2a2a;
-    margin: 5px 0;
-    border-radius: 5px;
+    margin: 6px 0;
+    border-radius: 10px;
     cursor: pointer;
+    transition: 0.3s;
+}
+
+li:hover {
+    background-color: #1DB95422;
+    transform: scale(1.02);
 }
 
 audio {
     width: 100%;
-    margin-top: 15px;
+    margin-top: 20px;
+    border-radius: 8px;
 }
-@media (max-width: 400px) {
+
+@media (max-width: 500px) {
     #encabezado {
-        padding: 8vh 0;
+        padding: 10vh 0;
     }
+
     #encabezado h1 {
-        font-size: clamp(1.5rem, 6vw, 2.5rem);
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    .seccion-auth, #dashboard-section, #songs-section {
+        padding: 20px;
+    }
+
+    input {
+        width: 95%;
     }
 }

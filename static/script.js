@@ -109,6 +109,8 @@ function playSong(songName) {
 
     audioPlayer.src = `/media/${songName}.mp3`;
     audioPlayer.play();
+
+    document.getElementById("current-song-name").textContent = songName;
 }
 
 audioPlayer.addEventListener("ended", () => {
