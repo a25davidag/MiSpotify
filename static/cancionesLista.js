@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch(`/songs?username=${currentUser}`);
         const data = await response.json();
         currentSongs = data.songs || [];
-        renderSongList(); // no reproduce nada al entrar
+        renderSongList();
     } catch (error) {
         console.error(error);
         alert("Error al cargar las canciones");
@@ -23,6 +23,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("prev-song").addEventListener("click", anteriorCancion);
     document.getElementById("next-song").addEventListener("click", siguienteCancion);
     document.getElementById("back-menu").addEventListener("click", backToMenu);
+
+    audioPlayer.addEventListener("play", () => {
+        actualizarMediaSession(currentSongs[currentSongIndex]);
+    });
 });
 
 function renderSongList() {
@@ -43,6 +47,7 @@ function playSong(songName) {
     const encodedSong = encodeURIComponent(songName);
     audioPlayer.src = `/play/${currentUser}/${encodedSong}`;
     audioPlayer.play();
+    actualizarMediaSession(songName);
 }
 
 function siguienteCancion() {
@@ -64,3 +69,19 @@ function backToMenu() {
 audioPlayer.addEventListener("ended", () => {
     siguienteCancion();
 });
+
+function actualizarMediaSession(songName) {
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: songName,
+            artist: currentUser,
+            album: "MiSpotify",
+            artwork: [{ src: "/static/default-artwork.png", sizes: "512x512", type: "image/png" }]
+        });
+
+        navigator.mediaSession.setActionHandler('previoustrack', anteriorCancion);
+        navigator.mediaSession.setActionHandler('nexttrack', siguienteCancion);
+        navigator.mediaSession.setActionHandler('play', () => audioPlayer.play());
+        navigator.mediaSession.setActionHandler('pause', () => audioPlayer.pause());
+    }
+}

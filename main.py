@@ -88,24 +88,6 @@ def canciones_page(request: Request):
 def subir_cancion_page(request: Request):
     return templates.TemplateResponse("subirCancion.html", {"request": request})
 
-
-@app.post("/register")
-def register(user: UserCreate):
-    if any(u.username == user.username for u in login_service.users):
-        raise HTTPException(status_code=400, detail="El usuario ya existe")
-    login_service.create_new_user(user.username, user.password)
-    return {"success": True, "message": f"Usuario '{user.username}' registrado correctamente"}
-
-@app.post("/login")
-def login(user: UserLogin):
-    if not (user.username or not user.password):
-        raise HTTPException(status_code=400, detail="El usuario y contraseña requerido")
-    result = login_service.login_user(user.username, user.password)
-    if result:
-        return {"success": True, "message": f"Bienvenido {user.username}"}
-    raise HTTPException(status_code=401, detail="El usuario o contraseña incorrectos")
-
-
 @app.get("/songs")
 def get_all_songs(username: str = None):
     if not username or not any(u.username == username for u in login_service.users):
@@ -123,6 +105,23 @@ def get_all_songs(username: str = None):
     except Exception:
         return {"songs": []}
 
+
+
+@app.post("/register")
+def register(user: UserCreate):
+    if any(u.username == user.username for u in login_service.users):
+        raise HTTPException(status_code=400, detail="El usuario ya existe")
+    login_service.create_new_user(user.username, user.password)
+    return {"success": True, "message": f"Usuario '{user.username}' registrado correctamente"}
+
+@app.post("/login")
+def login(user: UserLogin):
+    if not (user.username or not user.password):
+        raise HTTPException(status_code=400, detail="El usuario y contraseña requerido")
+    result = login_service.login_user(user.username, user.password)
+    if result:
+        return {"success": True, "message": f"Bienvenido {user.username}"}
+    raise HTTPException(status_code=401, detail="El usuario o contraseña incorrectos")
 
 @app.post("/upload-song")
 async def upload_song(username: str = Form(...), file: UploadFile = File(...)):

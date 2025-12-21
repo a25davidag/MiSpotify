@@ -44,7 +44,7 @@ async function uploadSong() {
         if (response.ok && data.success) {
             messageDiv.style.color = "#1DB954";
             messageDiv.textContent = `Archivo '${data.filename}' subido con éxito.`;
-            fileInput.value = ""; // limpiar input
+            fileInput.value = "";
         } else {
             messageDiv.style.color = "#ff6b6b";
             messageDiv.textContent = data.detail || "Error al subir el archivo";
