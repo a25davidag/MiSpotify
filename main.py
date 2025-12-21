@@ -1,5 +1,6 @@
-from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form, Response, Depends
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import os
@@ -14,6 +15,8 @@ from genre import Genre
 
 app = FastAPI()
 login_service = Login()
+
+SESSION_COOKIE = "session_user"
 
 MEDIA_DIR = "./media/"
 TEMPLATES_DIR = "./templates"
@@ -68,30 +71,41 @@ class UserLogin(BaseModel):
 
 
 
-@app.get("/")
-def login_page(request: Request):
-    return templates.TemplateResponse("spotify.html", {"request": request,"mode":"login"})
+def require_login(request: Request):
+    session_user = request.cookies.get(SESSION_COOKIE)
+    if not session_user or not any(u.username == session_user for u in login_service.users):
+        raise HTTPException(status_code=401, detail="No autorizado")
+    return session_user
 
-@app.get("/register")
+
+@app.get("/", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("spotify.html", {"request": request, "mode": "login"})
+
+
+@app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
     return templates.TemplateResponse("spotify.html", {"request": request, "mode": "register"})
 
-@app.get("/menu")
-def menu_page(request: Request):
+
+@app.get("/menu", response_class=HTMLResponse)
+def menu_page(request: Request, session_user: str = Depends(require_login)):
     return templates.TemplateResponse("menu.html", {"request": request})
 
-@app.get("/canciones")
-def canciones_page(request: Request):
+
+@app.get("/canciones", response_class=HTMLResponse)
+def canciones_page(request: Request, session_user: str = Depends(require_login)):
     return templates.TemplateResponse("cancionesLista.html", {"request": request})
 
-@app.get("/subir-cancion")
-def subir_cancion_page(request: Request):
+
+@app.get("/subir-cancion", response_class=HTMLResponse)
+def subir_cancion_page(request: Request, session_user: str = Depends(require_login)):
     return templates.TemplateResponse("subirCancion.html", {"request": request})
 
+
 @app.get("/songs")
-def get_all_songs(username: str = None):
-    if not username or not any(u.username == username for u in login_service.users):
-        raise HTTPException(status_code=401, detail="Debes iniciar sesión para ver las canciones:)")
+def get_all_songs(session_user: str = Depends(require_login)):
+    username = session_user
     try:
         songs_list = [song.name for song in songs]
 
@@ -106,7 +120,6 @@ def get_all_songs(username: str = None):
         return {"songs": []}
 
 
-
 @app.post("/register")
 def register(user: UserCreate):
     if any(u.username == user.username for u in login_service.users):
@@ -114,18 +127,21 @@ def register(user: UserCreate):
     login_service.create_new_user(user.username, user.password)
     return {"success": True, "message": f"Usuario '{user.username}' registrado correctamente"}
 
+
 @app.post("/login")
-def login(user: UserLogin):
+def login(user: UserLogin, response: Response):
     if not (user.username or not user.password):
         raise HTTPException(status_code=400, detail="El usuario y contraseña requerido")
     result = login_service.login_user(user.username, user.password)
     if result:
+        response.set_cookie(key=SESSION_COOKIE, value=user.username, httponly=True)
         return {"success": True, "message": f"Bienvenido {user.username}"}
     raise HTTPException(status_code=401, detail="El usuario o contraseña incorrectos")
 
+
 @app.post("/upload-song")
-async def upload_song(username: str = Form(...), file: UploadFile = File(...)):
-    if not username or not any(u.username == username for u in login_service.users):
+async def upload_song(username: str = Form(...), file: UploadFile = File(...), session_user: str = Depends(require_login)):
+    if username != session_user:
         raise HTTPException(status_code=401, detail="No autorizado")
     if not file.filename.endswith(".mp3"):
         raise HTTPException(status_code=400, detail="Solo se permite subir archivos MP3.")
@@ -141,8 +157,8 @@ async def upload_song(username: str = Form(...), file: UploadFile = File(...)):
 
 
 @app.get("/play/{username}/{song_name}")
-def play_song(username: str, song_name: str):
-    if not username or not any(u.username == username for u in login_service.users):
+def play_song(username: str, song_name: str, session_user: str = Depends(require_login)):
+    if username != session_user:
         raise HTTPException(status_code=401, detail="No autorizado")
 
     user_path = os.path.join(MEDIA_DIR, username, f"{song_name}.mp3")
