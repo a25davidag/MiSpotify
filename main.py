@@ -72,6 +72,23 @@ def login_page(request: Request):
 def register_page(request: Request):
     return templates.TemplateResponse("spotify.html", {"request": request, "mode": "register"})
 
+@app.get("/menu")
+def menu_page(request: Request):
+    return templates.TemplateResponse("menu.html", {"request": request})
+
+@app.get("/canciones")
+def canciones_page(request: Request):
+    return templates.TemplateResponse("cancionesLista.html", {"request": request})
+
+@app.get("/songs")
+def get_all_songs(username: str = None):
+    if not username or not any(u.username == username for u in login_service.users):
+        raise HTTPException(status_code=401, detail="Debes iniciar sesión para ver las canciones:)")
+    try:
+        songs_list = [song.name for song in songs]
+        return {"songs": songs_list}
+    except Exception:
+        return {"songs": []}
 
 @app.post("/register")
 def register(user: UserCreate):

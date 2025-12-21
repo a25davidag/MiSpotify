@@ -3,59 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify</title>
+    <title>Spotify - Login / Registro</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
 <section id="encabezado">
-<h1>Spotify Premiun</h1>
+    <h1>Spotify Premium</h1>
 </section>
 
+
 {% if mode == "login" %}
-<div id="login-section" class="seccion-auth desvanecer visible">
+<div id="login-section" class="seccion-auth visible">
     <h2>Iniciar sesión</h2>
     <input type="text" id="login-username" placeholder="Usuario">
     <input type="password" id="login-password" placeholder="Contraseña">
-    <button onclick="login()">Entrar</button>
+    <button id="login-button">Entrar</button>
 
     <p id="login-message" class="mensaje"></p>
-    <p>¿No tienes cuenta? Regístrate <a href="/register" onclick="cambiarARegistro()">Aquí</a></p>
+    <p>¿No tienes cuenta? Regístrate <a href="/register">Aquí</a></p>
 </div>
 
+
 {% elif mode == "register" %}
-<div id="register-section" class="seccion-auth desvanecer">
+<div id="register-section" class="seccion-auth visible">
     <h2>Registrar usuario</h2>
     <input type="text" id="register-username" placeholder="Usuario">
     <input type="password" id="register-password" placeholder="Contraseña">
-    <button onclick="register()">Registrar</button>
+    <button id="register-button">Registrar</button>
 
     <p id="register-message" class="mensaje"></p>
-    <p>¿Ya tienes cuenta? Inicia sesión <a href="/" onclick="cambiarALogin()">Aquí</a></p>
+    <p>¿Ya tienes cuenta? Inicia sesión <a href="/">Aquí</a></p>
 </div>
 {% endif %}
-
-
-<div id="dashboard-section" style="display:none;">
-    <h2>¡Bienvenido, <span id="current-user"></span>!</h2>
-    <button onclick="showSongs()">Ver canciones</button>
-      <button onclick="buscarCancionesPrompt()">Buscar canciones</button>
-    <button onclick="verFavoritas()">Canciones que te gustan</button>
-    <button onclick="crearPlaylistPrompt()">Crear playlist</button>
-    <button onclick="subirCancionPrompt()">Subir canción</button>
-</div>
-
-<div id="songs-section" style="display:none;">
-    <h2>Canciones disponibles</h2>
-    <ul id="songs-list"></ul>
-
-    <audio id="audio-player" controls></audio>
-    <br><br>
-    <button onclick="anteriorCancion()"> < </button>
-    <button onclick="siguienteCancion()"> > </button>
-    <br><br>
-    <button onclick="backToDashboard()">Volver</button>
-</div>
 
 <script src="/static/script.js"></script>
 </body>

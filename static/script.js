@@ -1,13 +1,30 @@
-let currentUser = null;
-let currentSongs = [];
-let currentSongIndex = 0;
 
-const audioPlayer = document.getElementById("audio-player");
+let currentUser = null;
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const loginBtn = document.getElementById("login-button");
+    if (loginBtn) {
+        loginBtn.addEventListener("click", login);
+    }
+
+
+    const registerBtn = document.getElementById("register-button");
+    if (registerBtn) {
+        registerBtn.addEventListener("click", register);
+    }
+});
+
 
 async function login() {
-    const username = document.getElementById("login-username").value.trim();
-    const password = document.getElementById("login-password").value.trim();
+    const usernameInput = document.getElementById("login-username");
+    const passwordInput = document.getElementById("login-password");
     const messageDiv = document.getElementById("login-message");
+
+    if (!usernameInput || !passwordInput || !messageDiv) return;
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
 
     if (!username || !password) {
         messageDiv.style.color = "#ff6b6b";
@@ -26,9 +43,11 @@ async function login() {
 
         if (response.ok && data.success) {
             currentUser = username;
-            document.getElementById("login-section").style.display = "none";
-            document.getElementById("dashboard-section").style.display = "block";
-            document.getElementById("current-user").textContent = currentUser;
+            localStorage.setItem("currentUser", currentUser);
+            messageDiv.style.color = "#1DB954";
+            messageDiv.textContent = `Bienvenido ${currentUser}`;
+            // Redirigir al menú
+            window.location.href = "/menu";
         } else {
             messageDiv.style.color = "#ff6b6b";
             messageDiv.textContent = data.detail || "Usuario o contraseña incorrectos";
@@ -40,10 +59,16 @@ async function login() {
     }
 }
 
+
 async function register() {
-    const username = document.getElementById("register-username").value.trim();
-    const password = document.getElementById("register-password").value.trim();
+    const usernameInput = document.getElementById("register-username");
+    const passwordInput = document.getElementById("register-password");
     const messageDiv = document.getElementById("register-message");
+
+    if (!usernameInput || !passwordInput || !messageDiv) return;
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
 
     if (!username || !password) {
         messageDiv.style.color = "#ff6b6b";
@@ -72,85 +97,4 @@ async function register() {
         messageDiv.style.color = "#ff6b6b";
         messageDiv.textContent = "Error en el servidor";
     }
-}
-
-async function showSongs() {
-    if (!currentUser) {
-        alert("Debes iniciar sesión primero");
-        return;
-    }
-
-    document.getElementById("dashboard-section").style.display = "none";
-    document.getElementById("songs-section").style.display = "block";
-
-    try {
-        const response = await fetch(`/songs?username=${currentUser}`);
-        const data = await response.json();
-
-        currentSongs = data.songs || [];
-        currentSongIndex = 0;
-
-        renderSongList();
-    } catch (error) {
-        console.error(error);
-        alert("Error al cargar las canciones");
-    }
-}
-
-function backToDashboard() {
-    document.getElementById("songs-section").style.display = "none";
-    document.getElementById("dashboard-section").style.display = "block";
-    audioPlayer.pause();
-}
-
-function playSong(songName) {
-    currentSongIndex = currentSongs.indexOf(songName);
-    if (currentSongIndex === -1) currentSongIndex = 0;
-
-    audioPlayer.src = `/media/${songName}.mp3`;
-    audioPlayer.play();
-
-    document.getElementById("current-song-name").textContent = songName;
-}
-
-audioPlayer.addEventListener("ended", () => {
-    if (currentSongs.length === 0) return;
-
-    currentSongIndex++;
-    if (currentSongIndex >= currentSongs.length) {
-        currentSongIndex = 0;
-    }
-    playSong(currentSongs[currentSongIndex]);
-});
-
-function renderSongList() {
-    const list = document.getElementById("songs-list");
-    list.innerHTML = "";
-
-    currentSongs.forEach(song => {
-        const li = document.createElement("li");
-        li.textContent = song;
-        li.onclick = () => playSong(song);
-        list.appendChild(li);
-    });
-}
-
-function siguienteCancion() {
-    if (currentSongs.length === 0) return;
-
-    currentSongIndex++;
-    if (currentSongIndex >= currentSongs.length) {
-        currentSongIndex = 0;
-    }
-    playSong(currentSongs[currentSongIndex]);
-}
-
-function anteriorCancion() {
-    if (currentSongs.length === 0) return;
-
-    currentSongIndex--;
-    if (currentSongIndex < 0) {
-        currentSongIndex = currentSongs.length - 1;
-    }
-    playSong(currentSongs[currentSongIndex]);
 }
