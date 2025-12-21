@@ -1,47 +1,36 @@
+const hamburgerBtn = document.getElementById("hamburger-btn");
+const dropdownMenu = document.getElementById("dropdown-menu");
+const logoutBtn = document.getElementById("logout-btn");
 
 let currentUser = localStorage.getItem("currentUser") || null;
+document.getElementById("current-user").textContent = currentUser || "Invitado";
 
-
-document.addEventListener("DOMContentLoaded", () => {
-    if (!currentUser) {
-
-        window.location.href = "/";
-        return;
-    }
-
-
-    document.getElementById("current-user").textContent = currentUser;
-
-    document.getElementById("btn-canciones").addEventListener("click", irCanciones);
-    document.getElementById("btn-buscar").addEventListener("click", irBuscar);
-    document.getElementById("btn-favoritas").addEventListener("click", irFavoritas);
-    document.getElementById("btn-playlist").addEventListener("click", irPlaylist);
-    document.getElementById("btn-subir").addEventListener("click", irSubirCancion);
-    document.getElementById("btn-cerrar").addEventListener("click", cerrarSesion);
+// Mostrar/ocultar menú al pulsar hamburguesa
+hamburgerBtn.addEventListener("click", () => {
+    dropdownMenu.classList.toggle("hidden");
 });
 
-
-function irCanciones() {
-    localStorage.setItem("currentUser", currentUser);
-    window.location.href = "/canciones";
+// Función para navegar a páginas
+function goToPage(url) {
+    window.location.href = url;
 }
 
-
-function irBuscar() {
-    alert("Funcionalidad de buscar canciones aún no implementada.");
-}
-function irFavoritas() {
-    alert("Funcionalidad de canciones favoritas aún no implementada.");
-}
-function irPlaylist() {
-    alert("Funcionalidad de crear playlist aún no implementada.");
-}
-function irSubirCancion() {
-    alert("Funcionalidad de subir canción aún no implementada.");
-}
-
-
-function cerrarSesion() {
+// Cerrar sesión
+logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("currentUser");
     window.location.href = "/";
+});
+
+// Placeholders para las demás opciones
+function buscarCancionesPrompt() {
+    alert("Función de buscar canciones aún no implementada.");
+}
+function verFavoritas() {
+    alert("Función de canciones favoritas aún no implementada.");
+}
+function crearPlaylistPrompt() {
+    alert("Función de crear playlist aún no implementada.");
+}
+function subirCancionPrompt() {
+    alert("Función de subir canción aún no implementada.");
 }

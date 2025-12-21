@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify - Menú</title>
+    <title>Menu Spotify</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+    <header id="encabezado">
+        <div class="menu-bar">
+            <button id="hamburger-btn" class="hamburger">&#9776;</button>
+            <span class="logo">Spotify</span>
+            <button id="logout-btn" class="logout-btn">Cerrar sesión</button>
+        </div>
 
-<section id="encabezado">
-    <h1>Spotify Premium</h1>
-</section>
+        <nav id="dropdown-menu" class="hidden">
+            <ul>
+                <li onclick="goToPage('/canciones')">Ver canciones</li>
+                <li onclick="buscarCancionesPrompt()">Buscar canciones</li>
+                <li onclick="verFavoritas()">Canciones que te gustan</li>
+                <li onclick="crearPlaylistPrompt()">Crear playlist</li>
+                <li onclick="subirCancionPrompt()">Subir canción</li>
+            </ul>
+        </nav>
+    </header>
 
-<div id="menu-section" class="seccion-auth visible">
-    <h2>¡Bienvenido, <span id="current-user"></span>!</h2>
+    <main>
+        <h2>Bienvenido, <span id="current-user"></span>!</h2>
+    </main>
 
-    <button id="btn-canciones">Ver canciones</button>
-    <button id="btn-buscar">Buscar canciones</button>
-    <button id="btn-favoritas">Canciones que te gustan</button>
-    <button id="btn-playlist">Crear playlist</button>
-    <button id="btn-subir">Subir canción</button>
-    <button id="btn-cerrar">Cerrar sesión</button>
-</div>
-
-<script src="/static/menu.js"></script>
+    <script src="/static/menu.js"></script>
 </body>
 </html>

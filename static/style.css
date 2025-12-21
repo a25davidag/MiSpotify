@@ -107,6 +107,76 @@ audio {
     border-radius: 8px;
 }
 
+
+#encabezado.menu-header {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #121212, #1DB95433);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+
+.menu-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.hamburger {
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: #1DB954;
+    cursor: pointer;
+}
+
+
+.logout-btn {
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: none;
+    background-color: #1DB954;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+#dropdown-menu {
+    margin-top: 5px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    width: 200px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+#dropdown-menu ul {
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+}
+
+#dropdown-menu li {
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#dropdown-menu li:hover {
+    background-color: #1DB95422;
+    transform: scale(1.02);
+}
+
+.hidden {
+    display: none;
+}
+
+
+
 @media (max-width: 500px) {
     #encabezado {
         padding: 10vh 0;
