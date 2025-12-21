@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch(`/songs?username=${currentUser}`);
         const data = await response.json();
         currentSongs = data.songs || [];
-        renderSongList();
+        renderSongList(); // no reproduce nada al entrar
     } catch (error) {
         console.error(error);
         alert("Error al cargar las canciones");
@@ -40,7 +40,8 @@ function playSong(songName) {
     currentSongIndex = currentSongs.indexOf(songName);
     if (currentSongIndex === -1) currentSongIndex = 0;
 
-    audioPlayer.src = `/media/${songName}.mp3`;
+    const encodedSong = encodeURIComponent(songName);
+    audioPlayer.src = `/play/${currentUser}/${encodedSong}`;
     audioPlayer.play();
 }
 

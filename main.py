@@ -1,8 +1,11 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import os
+
+from fastapi import Form
+from starlette.responses import FileResponse
 
 from login import Login
 from user import User
@@ -64,6 +67,7 @@ class UserLogin(BaseModel):
     password: str
 
 
+
 @app.get("/")
 def login_page(request: Request):
     return templates.TemplateResponse("spotify.html", {"request": request,"mode":"login"})
@@ -80,15 +84,10 @@ def menu_page(request: Request):
 def canciones_page(request: Request):
     return templates.TemplateResponse("cancionesLista.html", {"request": request})
 
-@app.get("/songs")
-def get_all_songs(username: str = None):
-    if not username or not any(u.username == username for u in login_service.users):
-        raise HTTPException(status_code=401, detail="Debes iniciar sesión para ver las canciones:)")
-    try:
-        songs_list = [song.name for song in songs]
-        return {"songs": songs_list}
-    except Exception:
-        return {"songs": []}
+@app.get("/subir-cancion")
+def subir_cancion_page(request: Request):
+    return templates.TemplateResponse("subirCancion.html", {"request": request})
+
 
 @app.post("/register")
 def register(user: UserCreate):
@@ -113,6 +112,48 @@ def get_all_songs(username: str = None):
         raise HTTPException(status_code=401, detail="Debes iniciar sesión para ver las canciones:)")
     try:
         songs_list = [song.name for song in songs]
+
+        user_dir = os.path.join(MEDIA_DIR, username)
+        if os.path.exists(user_dir):
+            for f in os.listdir(user_dir):
+                if f.endswith(".mp3"):
+                    songs_list.append(f.replace(".mp3",""))
+
         return {"songs": songs_list}
     except Exception:
         return {"songs": []}
+
+
+@app.post("/upload-song")
+async def upload_song(username: str = Form(...), file: UploadFile = File(...)):
+    if not username or not any(u.username == username for u in login_service.users):
+        raise HTTPException(status_code=401, detail="No autorizado")
+    if not file.filename.endswith(".mp3"):
+        raise HTTPException(status_code=400, detail="Solo se permite subir archivos MP3.")
+
+    user_dir = os.path.join(MEDIA_DIR, username)
+    os.makedirs(user_dir, exist_ok=True)
+
+    save_path = os.path.join(user_dir, file.filename)
+    with open(save_path, "wb") as f:
+        f.write(await file.read())
+
+    return {"success": True, "filename": file.filename}
+
+
+@app.get("/play/{username}/{song_name}")
+def play_song(username: str, song_name: str):
+    if not username or not any(u.username == username for u in login_service.users):
+        raise HTTPException(status_code=401, detail="No autorizado")
+
+    user_path = os.path.join(MEDIA_DIR, username, f"{song_name}.mp3")
+    global_path = os.path.join(MEDIA_DIR, f"{song_name}.mp3")
+
+    if os.path.exists(user_path):
+        file_path = user_path
+    elif os.path.exists(global_path):
+        file_path = global_path
+    else:
+        raise HTTPException(status_code=404, detail="Canción no encontrada")
+
+    return FileResponse(file_path, media_type="audio/mpeg")
