@@ -23,7 +23,6 @@ body {
     padding: 50px 20px;
     background: linear-gradient(135deg, #121212, #1DB95411);
     box-shadow: 0 8px 30px rgba(0,0,0,0.8);
-    border-bottom: 1px solid rgba(29, 185, 84, 0.2);
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
 }
@@ -32,7 +31,6 @@ body {
     font-size: 2.6rem;
     color: #1DB954;
     text-shadow: 0 0 20px rgba(29,185,84,0.5);
-    letter-spacing: -1px;
 }
 
 .seccion-auth {
@@ -43,24 +41,22 @@ body {
     background: rgba(25, 25, 25, 0.95);
     border-radius: 24px;
     box-shadow: 0 25px 60px rgba(0,0,0,0.8);
-    border: 1px solid rgba(255, 255, 255, 0.05);
     text-align: center;
-    animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: fadeIn 0.8s ease;
 }
 
 .seccion-auth h2 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: #1DB954;
     margin-bottom: 15px;
     text-align: left;
-    font-weight: 600;
 }
 
 hr {
     margin: 30px 0;
-    border: 0;
+    border: none;
     height: 1px;
-    background: linear-gradient(to right, transparent, rgba(29, 185, 84, 0.4), transparent);
+    background: linear-gradient(to right, transparent, rgba(29,185,84,0.4), transparent);
 }
 
 input[type="file"],
@@ -84,10 +80,9 @@ input:focus {
     border-color: #1DB954;
     outline: none;
     background-color: #222;
-    box-shadow: 0 0 12px rgba(29, 185, 84, 0.2);
+    box-shadow: 0 0 12px rgba(29,185,84,0.25);
 }
 
-/* Estilo especial para el input de archivo */
 input[type="file"]::-webkit-file-upload-button {
     background: #333;
     color: white;
@@ -96,11 +91,6 @@ input[type="file"]::-webkit-file-upload-button {
     border-radius: 8px;
     margin-right: 10px;
     cursor: pointer;
-    transition: 0.3s;
-}
-
-input[type="file"]::-webkit-file-upload-button:hover {
-    background: #444;
 }
 
 button {
@@ -113,20 +103,21 @@ button {
     border-radius: 30px;
     cursor: pointer;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.95rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 10px 20px rgba(29, 185, 84, 0.3);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 25px rgba(29,185,84,0.4);
+    transition: all 0.3s ease;
 }
 
 button:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(29, 185, 84, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(29,185,84,0.6);
 }
 
-button:active {
-    transform: translateY(0);
+.mensaje {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    min-height: 20px;
 }
 
 #back-menu {
@@ -134,53 +125,30 @@ button:active {
     top: 30px;
     right: 30px;
     width: auto;
-    padding: 12px 25px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    font-size: 0.9rem;
-    box-shadow: none;
+    padding: 12px 26px;
+    background: linear-gradient(135deg, #1DB954, #1ed760);
+    color: #000;
+    border-radius: 30px;
+    font-weight: 700;
+    box-shadow: 0 10px 25px rgba(29,185,84,0.5);
 }
 
 #back-menu:hover {
-    background: #fff;
-    color: #000;
-    border-color: #fff;
-}
-
-.mensaje {
-    margin-top: 10px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    min-height: 20px;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(29,185,84,0.7);
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(30px); }
+    from { opacity: 0; transform: translateY(25px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px) {
-    #encabezado {
-        padding: 30px 15px;
-    }
-
-    #encabezado h1 {
-        font-size: 2rem;
-    }
-
-    .seccion-auth {
-        width: 95%;
-        padding: 25px;
-        margin-top: 20px;
-    }
-
     #back-menu {
         position: relative;
         top: 0;
         right: 0;
-        margin-top: 20px;
         width: 100%;
+        margin: 20px auto;
     }
 }
