@@ -83,11 +83,11 @@ def require_login(request: Request):
 
 @app.get("/", response_class=HTMLResponse)
 def login_page(request: Request):
-    return templates.TemplateResponse("spotify.html", {"request": request, "mode": "login"})
+    return templates.TemplateResponse("login.html", {"request": request, "mode": "login"})
 
 @app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
-    return templates.TemplateResponse("spotify.html", {"request": request, "mode": "register"})
+    return templates.TemplateResponse("login.html", {"request": request, "mode": "register"})
 
 @app.get("/menu", response_class=HTMLResponse)
 def menu_page(request: Request, session_user: str = Depends(require_login)):
