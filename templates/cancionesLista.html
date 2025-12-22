@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Canciones</title>
-    <link rel="stylesheet" href="/static/estilos/style.css">
+    <link rel="stylesheet" href="/static/estilos/cancionesLista.css">
 </head>
 <body>
 
@@ -12,17 +12,23 @@
     <h1>Lista de Canciones</h1>
 </section>
 
-<div id="songs-section" class="seccion-auth visible">
-    <ul id="songs-list"></ul>
+<div class="page-wrapper">
+    <div id="songs-section" class="seccion-auth visible">
+        <ul id="songs-list"></ul>
 
-    <audio id="audio-player" controls></audio>
-    <br><br>
-    <button id="prev-song">Anterior</button>
-    <button id="next-song">Siguiente</button>
-    <br><br>
-    <button id="back-menu">Volver al menú</button>
+        <audio id="audio-player" controls></audio>
+
+        <div class="controls">
+            <button id="prev-song">Anterior</button>
+            <button id="next-song">Siguiente</button>
+        </div>
+    </div>
 </div>
+
+<button id="back-menu">Volver al menú</button>
 
 <script src="/static/script/cancionesLista.js"></script>
 </body>
 </html>
+
+

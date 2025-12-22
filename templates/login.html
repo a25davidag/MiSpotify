@@ -4,39 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotify - Login / Registro</title>
-    <link rel="stylesheet" href="/static/estilos/style.css">
+    <link rel="stylesheet" href="/static/estilos/login.css">
 </head>
 <body>
 
-<section id="encabezado">
+<header id="encabezado">
     <h1>Spotify Premium</h1>
-</section>
+    <p class="subtitulo">Tu música, sin límites</p>
+</header>
 
+<main class="auth-wrapper">
 
 {% if mode == "login" %}
-<div id="login-section" class="seccion-auth visible">
-    <h2>Iniciar sesión</h2>
-    <input type="text" id="login-username" placeholder="Usuario">
-    <input type="password" id="login-password" placeholder="Contraseña">
-    <button id="login-button">Entrar</button>
+    <section id="login-section" class="seccion-auth visible">
+        <h2>Iniciar sesión</h2>
 
-    <p id="login-message" class="mensaje"></p>
-    <p>¿No tienes cuenta? Regístrate <a href="/register">Aquí</a></p>
-</div>
+        <input type="text" id="login-username" placeholder="Usuario">
+        <input type="password" id="login-password" placeholder="Contraseña">
 
+        <button id="login-button">Entrar</button>
+
+        <p id="login-message" class="mensaje"></p>
+
+        <p class="link">
+            ¿No tienes cuenta?
+            <a href="/register">Regístrate aquí</a>
+        </p>
+    </section>
 
 {% elif mode == "register" %}
-<div id="register-section" class="seccion-auth visible">
-    <h2>Registrar usuario</h2>
-    <input type="text" id="register-username" placeholder="Usuario">
-    <input type="password" id="register-password" placeholder="Contraseña">
-    <button id="register-button">Registrar</button>
+    <section id="register-section" class="seccion-auth visible">
+        <h2>Crear cuenta</h2>
 
-    <p id="register-message" class="mensaje"></p>
-    <p>¿Ya tienes cuenta? Inicia sesión <a href="/">Aquí</a></p>
-</div>
+        <input type="text" id="register-username" placeholder="Usuario">
+        <input type="password" id="register-password" placeholder="Contraseña">
+
+        <button id="register-button">Registrar</button>
+
+        <p id="register-message" class="mensaje"></p>
+
+        <p class="link">
+            ¿Ya tienes cuenta?
+            <a href="/">Inicia sesión</a>
+        </p>
+    </section>
 {% endif %}
+
+</main>
 
 <script src="/static/script/login.js"></script>
 </body>
 </html>
+
