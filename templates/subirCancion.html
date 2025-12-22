@@ -13,12 +13,27 @@
 </section>
 
 <div class="seccion-auth">
-    <h2>Selecciona tu archivo MP3</h2>
+
+    <h2>Subir archivo MP3</h2>
     <input type="file" id="song-file" accept=".mp3">
     <button id="upload-btn">Subir Canción</button>
     <p id="upload-message" class="mensaje"></p>
+
+    <hr>
+
+    <h2>Subir desde URL</h2>
+    <input
+        type="text"
+        id="song-url"
+        placeholder="Pega aquí el enlace (YouTube, etc.)"
+        style="width: 100%; padding: 8px;"
+    >
+    <button id="upload-url-btn">Descargar Canción</button>
+    <p id="upload-url-message" class="mensaje"></p>
+
     <br>
     <button id="back-menu">Volver al Menú</button>
+
 </div>
 
 <script src="/static/subirCancion.js"></script>

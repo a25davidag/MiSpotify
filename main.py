@@ -5,6 +5,9 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import os
 
+import subprocess
+import uuid
+
 from fastapi import Form
 from starlette.responses import FileResponse
 
@@ -82,42 +85,50 @@ def require_login(request: Request):
 def login_page(request: Request):
     return templates.TemplateResponse("spotify.html", {"request": request, "mode": "login"})
 
-
 @app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
     return templates.TemplateResponse("spotify.html", {"request": request, "mode": "register"})
-
 
 @app.get("/menu", response_class=HTMLResponse)
 def menu_page(request: Request, session_user: str = Depends(require_login)):
     return templates.TemplateResponse("menu.html", {"request": request})
 
-
 @app.get("/canciones", response_class=HTMLResponse)
 def canciones_page(request: Request, session_user: str = Depends(require_login)):
     return templates.TemplateResponse("cancionesLista.html", {"request": request})
 
-
 @app.get("/subir-cancion", response_class=HTMLResponse)
 def subir_cancion_page(request: Request, session_user: str = Depends(require_login)):
     return templates.TemplateResponse("subirCancion.html", {"request": request})
-
 
 @app.get("/songs")
 def get_all_songs(session_user: str = Depends(require_login)):
     username = session_user
     try:
         songs_list = [song.name for song in songs]
-
         user_dir = os.path.join(MEDIA_DIR, username)
         if os.path.exists(user_dir):
             for f in os.listdir(user_dir):
                 if f.endswith(".mp3"):
                     songs_list.append(f.replace(".mp3",""))
-
         return {"songs": songs_list}
     except Exception:
         return {"songs": []}
+
+@app.get("/play/{username}/{song_name}")
+def play_song(username: str, song_name: str, session_user: str = Depends(require_login)):
+    if username != session_user:
+        raise HTTPException(status_code=401, detail="No autorizado")
+    user_path = os.path.join(MEDIA_DIR, username, f"{song_name}.mp3")
+    global_path = os.path.join(MEDIA_DIR, f"{song_name}.mp3")
+    if os.path.exists(user_path):
+        file_path = user_path
+    elif os.path.exists(global_path):
+        file_path = global_path
+    else:
+        raise HTTPException(status_code=404, detail="Canción no encontrada")
+    return FileResponse(file_path, media_type="audio/mpeg")
+
 
 
 @app.post("/register")
@@ -126,7 +137,6 @@ def register(user: UserCreate):
         raise HTTPException(status_code=400, detail="El usuario ya existe")
     login_service.create_new_user(user.username, user.password)
     return {"success": True, "message": f"Usuario '{user.username}' registrado correctamente"}
-
 
 @app.post("/login")
 def login(user: UserLogin, response: Response):
@@ -138,37 +148,41 @@ def login(user: UserLogin, response: Response):
         return {"success": True, "message": f"Bienvenido {user.username}"}
     raise HTTPException(status_code=401, detail="El usuario o contraseña incorrectos")
 
-
 @app.post("/upload-song")
 async def upload_song(username: str = Form(...), file: UploadFile = File(...), session_user: str = Depends(require_login)):
     if username != session_user:
         raise HTTPException(status_code=401, detail="No autorizado")
     if not file.filename.endswith(".mp3"):
         raise HTTPException(status_code=400, detail="Solo se permite subir archivos MP3.")
-
     user_dir = os.path.join(MEDIA_DIR, username)
     os.makedirs(user_dir, exist_ok=True)
-
     save_path = os.path.join(user_dir, file.filename)
     with open(save_path, "wb") as f:
         f.write(await file.read())
-
     return {"success": True, "filename": file.filename}
 
 
-@app.get("/play/{username}/{song_name}")
-def play_song(username: str, song_name: str, session_user: str = Depends(require_login)):
+@app.post("/upload-song-url")
+async def upload_song_from_url(username: str = Form(...), url: str = Form(...), session_user: str = Depends(require_login)):
+    print(f"Llamada recibida: username={username}, url={url}")
     if username != session_user:
         raise HTTPException(status_code=401, detail="No autorizado")
-
-    user_path = os.path.join(MEDIA_DIR, username, f"{song_name}.mp3")
-    global_path = os.path.join(MEDIA_DIR, f"{song_name}.mp3")
-
-    if os.path.exists(user_path):
-        file_path = user_path
-    elif os.path.exists(global_path):
-        file_path = global_path
-    else:
-        raise HTTPException(status_code=404, detail="Canción no encontrada")
-
-    return FileResponse(file_path, media_type="audio/mpeg")
+    user_dir = os.path.join(MEDIA_DIR, username)
+    os.makedirs(user_dir, exist_ok=True)
+    output_template = os.path.join(user_dir, "%(title)s.%(ext)s")
+    try:
+        subprocess.run(
+            [
+                "yt-dlp",
+                "-x",
+                "--audio-format", "mp3",
+                "--ffmpeg-location", r"C:\ffmpeg\ffmpeg-2025-12-18-git-78c75d546a-full_build\bin",
+                "-o", output_template,
+                url
+            ],
+            check=True
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"Error en la descarga/conversión: {e}")
+        raise HTTPException(status_code=400, detail="Error al descargar la canción")
+    return {"success": True, "message": "Canción descargada correctamente"}
