@@ -76,7 +76,6 @@ function actualizarMediaSession(songName) {
             title: songName,
             artist: currentUser,
             album: "MiSpotify",
-            artwork: [{ src: "/static/default-artwork.png", sizes: "512x512", type: "image/png" }]
         });
 
         navigator.mediaSession.setActionHandler('previoustrack', anteriorCancion);
