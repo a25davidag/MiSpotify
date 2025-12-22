@@ -6,139 +6,181 @@
 
 body {
     min-height: 100vh;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background:
-        radial-gradient(circle at top, rgba(29,185,84,0.1), transparent 50%),
+        radial-gradient(circle at top, rgba(29,185,84,0.15), transparent 50%),
         linear-gradient(180deg, #121212, #000000);
     color: #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: hidden;
 }
 
 #encabezado {
     width: 100%;
     text-align: center;
-    padding: 60px 20px;
-    background: linear-gradient(135deg, #121212, #1DB95422);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.7);
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
+    padding: 50px 20px;
+    background: linear-gradient(135deg, #121212, #1DB95411);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+    border-bottom: 1px solid rgba(29, 185, 84, 0.2);
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
 }
 
 #encabezado h1 {
-    font-size: 2.8rem;
+    font-size: 2.6rem;
     color: #1DB954;
-    text-shadow: 0 0 15px rgba(29,185,84,0.6);
+    text-shadow: 0 0 20px rgba(29,185,84,0.5);
+    letter-spacing: -1px;
 }
 
 .seccion-auth {
     width: 90%;
-    max-width: 600px;
-    margin: 30px auto;
-    padding: 30px;
-    background: rgba(25,25,25,0.95);
-    border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 40px;
+    background: rgba(25, 25, 25, 0.95);
+    border-radius: 24px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     text-align: center;
-    animation: fadeIn 0.6s ease;
+    animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@keyframes fadeIn {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity:1; transform: translateY(0);}
+.seccion-auth h2 {
+    font-size: 1.2rem;
+    color: #1DB954;
+    margin-bottom: 15px;
+    text-align: left;
+    font-weight: 600;
+}
+
+hr {
+    margin: 30px 0;
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(29, 185, 84, 0.4), transparent);
 }
 
 input[type="file"],
 input[type="text"] {
     width: 100%;
-    padding: 12px;
-    margin: 12px 0;
-    background-color: #2a2a2a;
+    padding: 14px;
+    margin: 10px 0 20px 0;
+    background-color: #1a1a1a;
     color: #fff;
-    border: 1px solid #1DB954;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: 0.3s;
-}
-
-input:focus {
-    border-color: #1ed760;
-    outline: none;
-    box-shadow: 0 0 8px #1ed76055;
-}
-
-button {
-    padding: 12px 25px;
-    margin: 10px 5px;
-    background: linear-gradient(135deg, #1DB954, #1ed760);
-    color: #000;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 1rem;
-    box-shadow: 0 10px 25px rgba(29,185,84,0.5);
+    border: 1px solid #333;
+    border-radius: 12px;
+    font-size: 0.95rem;
     transition: all 0.3s ease;
 }
 
+input[type="text"]::placeholder {
+    color: #666;
+}
+
+input:focus {
+    border-color: #1DB954;
+    outline: none;
+    background-color: #222;
+    box-shadow: 0 0 12px rgba(29, 185, 84, 0.2);
+}
+
+/* Estilo especial para el input de archivo */
+input[type="file"]::-webkit-file-upload-button {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+    background: #444;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    background: linear-gradient(135deg, #1DB954, #1ed760);
+    color: #000;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 10px 20px rgba(29, 185, 84, 0.3);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
 button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 30px rgba(29,185,84,0.6);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(29, 185, 84, 0.4);
 }
 
-/
-.mensaje {
-    margin-top: 8px;
-    font-size: 0.95rem;
+button:active {
+    transform: translateY(0);
 }
-
 
 #back-menu {
     position: fixed;
     top: 30px;
     right: 30px;
-    z-index: 999;
-    padding: 14px 28px;
-    border-radius: 30px;
-    font-weight: bold;
-    font-size: 1rem;
-    background: linear-gradient(135deg, #1DB954, #1ed760);
-    color: #000;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 10px 25px rgba(29,185,84,0.5);
-    transition: all 0.3s ease;
+    width: auto;
+    padding: 12px 25px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    font-size: 0.9rem;
+    box-shadow: none;
 }
 
 #back-menu:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 30px rgba(29,185,84,0.6);
+    background: #fff;
+    color: #000;
+    border-color: #fff;
 }
 
-@media (max-width: 480px) {
+.mensaje {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    min-height: 20px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    #encabezado {
+        padding: 30px 15px;
+    }
+
     #encabezado h1 {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
 
     .seccion-auth {
-        padding: 20px;
-    }
-
-    input[type="file"],
-    input[type="text"] {
-        padding: 10px;
-    }
-
-    button {
-        padding: 10px 20px;
-        font-size: 0.95rem;
+        width: 95%;
+        padding: 25px;
+        margin-top: 20px;
     }
 
     #back-menu {
-        padding: 12px 24px;
-        font-size: 0.95rem;
-        top: 20px;
-        right: 20px;
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-top: 20px;
+        width: 100%;
     }
 }

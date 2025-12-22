@@ -84,3 +84,44 @@ function actualizarMediaSession(songName) {
         navigator.mediaSession.setActionHandler('pause', () => audioPlayer.pause());
     }
 }
+
+const visualizer = document.getElementById('audio-visualizer');
+const audio = document.getElementById('audio-player');
+
+const barsCount = 30;
+for (let i = 0; i < barsCount; i++) {
+    const bar = document.createElement('div');
+    visualizer.appendChild(bar);
+}
+
+// Configuración Web Audio API
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const analyser = audioCtx.createAnalyser();
+let source;
+
+audio.addEventListener('play', () => {
+    if (!source) {
+        source = audioCtx.createMediaElementSource(audio);
+        source.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        analyser.fftSize = 64;
+    }
+    animateVisualizer();
+});
+
+function animateVisualizer() {
+    if (audio.paused) return;
+    const bars = visualizer.children;
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(dataArray);
+
+    const maxBarHeight = 60;
+    for (let i = 0; i < bars.length; i++) {
+        const value = dataArray[i] || 0;
+        bars[i].style.height = `${(value / 255) * maxBarHeight}px`;
+        bars[i].style.opacity = value / 255;
+    }
+
+    requestAnimationFrame(animateVisualizer);
+}
+

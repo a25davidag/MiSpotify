@@ -15,12 +15,20 @@
 <div class="page-wrapper">
     <div id="songs-section" class="seccion-auth visible">
         <ul id="songs-list"></ul>
+    </div>
 
-        <audio id="audio-player" controls></audio>
+    <div class="player-container">
+        <div class="audio-box">
+            <div class="album-art">Art</div>
 
-        <div class="controls">
-            <button id="prev-song">Anterior</button>
-            <button id="next-song">Siguiente</button>
+            <div class="audio-visualizer" id="audio-visualizer"></div>
+
+            <audio id="audio-player" controls></audio>
+
+            <div class="controls">
+                <button id="prev-song">Anterior</button>
+                <button id="next-song">Siguiente</button>
+            </div>
         </div>
     </div>
 </div>
@@ -28,6 +36,7 @@
 <button id="back-menu">Volver al menú</button>
 
 <script src="/static/script/cancionesLista.js"></script>
+<script src="/static/script/visualizer.js"></script>
 </body>
 </html>
 
