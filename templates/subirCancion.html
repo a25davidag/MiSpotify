@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subir Canción</title>
     <link rel="stylesheet" href="/static/estilos/subirCancion.css">
@@ -17,22 +18,24 @@
     <h2>Subir archivo MP3</h2>
     <input type="file" id="song-file" accept=".mp3">
     <button id="upload-btn">Subir Canción</button>
-    <p id="upload-message" class="mensaje"></p>
+    <p id="upload-message"></p>
 
     <hr>
 
-    <h2>Subir desde URL</h2>
-    <input
-        type="text"
-        id="song-url"
-        placeholder="Pega aquí el enlace (YouTube, etc.)"
-    >
-    <button id="upload-url-btn">Descargar Canción</button>
-    <p id="upload-url-message" class="mensaje"></p>
+    <h2>Desde URL (YouTube, etc.)</h2>
+    <input type="text" id="song-url" placeholder="Pega aquí el enlace del video...">
+
+    <div>
+        <button id="upload-url-btn">Guardar en el servidor</button>
+        <button id="download-url-btn">Guardar en el dispositivo</button>
+    </div>
+
+    <p id="upload-url-message"></p>
+
+    <br>
+    <button id="back-menu">Volver al Menú</button>
 
 </div>
-
-<button id="back-menu">Volver al Menú</button>
 
 <script src="/static/script/subirCancion.js"></script>
 </body>

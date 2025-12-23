@@ -7,17 +7,17 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    document.getElementById("upload-btn")
-        .addEventListener("click", uploadSongFile);
+    const uploadBtn = document.getElementById("upload-btn");
+    if (uploadBtn) uploadBtn.addEventListener("click", uploadSongFile);
 
-    const urlBtn = document.getElementById("upload-url-btn");
-    if (urlBtn) {
-        urlBtn.addEventListener("click", uploadSongFromUrl);
-        console.log("Botón de URL registrado correctamente");
-    }
+    const uploadUrlBtn = document.getElementById("upload-url-btn");
+    if (uploadUrlBtn) uploadUrlBtn.addEventListener("click", uploadSongFromUrl);
 
-    document.getElementById("back-menu")
-        .addEventListener("click", () => window.location.href = "/menu");
+    const downloadUrlBtn = document.getElementById("download-url-btn");
+    if (downloadUrlBtn) downloadUrlBtn.addEventListener("click", downloadSongFromUrlLocal);
+
+    const backBtn = document.getElementById("back-menu");
+    if (backBtn) backBtn.addEventListener("click", () => window.location.href = "/menu");
 });
 
 async function uploadSongFile() {
@@ -31,13 +31,6 @@ async function uploadSongFile() {
     }
 
     const file = fileInput.files[0];
-
-    if (!file.name.toLowerCase().endsWith(".mp3")) {
-        messageDiv.style.color = "#ff6b6b";
-        messageDiv.textContent = "Solo se permite subir archivos MP3.";
-        return;
-    }
-
     const formData = new FormData();
     formData.append("file", file);
     formData.append("username", currentUser);
@@ -55,10 +48,9 @@ async function uploadSongFile() {
             fileInput.value = "";
         } else {
             messageDiv.style.color = "#ff6b6b";
-            messageDiv.textContent = data.detail || "Error al subir el archivo.";
+            messageDiv.textContent = data.detail || "Error al subir.";
         }
     } catch (error) {
-        console.error(error);
         messageDiv.style.color = "#ff6b6b";
         messageDiv.textContent = "Error de conexión con el servidor.";
     }
@@ -67,11 +59,7 @@ async function uploadSongFile() {
 async function uploadSongFromUrl() {
     const urlInput = document.getElementById("song-url");
     const messageDiv = document.getElementById("upload-url-message");
-
     const url = urlInput.value.trim();
-
-    console.log("BOTÓN PULSADO");
-    console.log("currentUser:", currentUser, "URL:", url);
 
     if (!url) {
         messageDiv.style.color = "#ff6b6b";
@@ -84,73 +72,91 @@ async function uploadSongFromUrl() {
     formData.append("url", url);
 
     messageDiv.style.color = "#ffffff";
-    messageDiv.textContent = "Descargando y convirtiendo canción...";
+    messageDiv.textContent = "Guardando en tu nube...";
 
     try {
         const response = await fetch("/upload-song-url", { method: "POST", body: formData });
         const data = await response.json();
 
-        console.log("Respuesta del servidor:", data);
-
         if (response.ok && data.success) {
             messageDiv.style.color = "#1DB954";
-            messageDiv.textContent = "Canción descargada correctamente.";
+            messageDiv.textContent = "¡Guardada en tu nube con éxito!";
             urlInput.value = "";
         } else {
             messageDiv.style.color = "#ff6b6b";
-            messageDiv.textContent = data.detail || "Error al descargar la canción.";
+            messageDiv.textContent = data.detail || "Error al procesar la URL.";
         }
     } catch (error) {
-        console.error(error);
         messageDiv.style.color = "#ff6b6b";
-        messageDiv.textContent = "Error de conexión con el servidor.";
+        messageDiv.textContent = "Error de conexión.";
     }
 }
 
-async function uploadSongFromUrl() {
+async function downloadSongFromUrlLocal() {
     const urlInput = document.getElementById("song-url");
     const messageDiv = document.getElementById("upload-url-message");
-
     const url = urlInput.value.trim();
-
-    console.log("BOTÓN PULSADO");
-    console.log("currentUser:", currentUser, "URL:", url);
 
     if (!url) {
         messageDiv.style.color = "#ff6b6b";
-        messageDiv.textContent = "Pega un enlace válido.";
+        messageDiv.textContent = "Pega un enlace para descargar al PC.";
         return;
     }
 
-    const formData = new FormData();
-    formData.append("username", currentUser);
-    formData.append("url", url);
-
     messageDiv.style.color = "#ffffff";
-    messageDiv.textContent = "Descargando y convirtiendo canción...";
+    messageDiv.textContent = "Preparando audio...";
 
     try {
-        const response = await fetch("/upload-song-url", {
+        const formData = new FormData();
+        formData.append("url", url);
+
+        const response = await fetch("/download-song-url", {
             method: "POST",
             body: formData
         });
 
-        const data = await response.json();
-
-        console.log("Respuesta del servidor:", data);
-
-        if (response.ok && data.success) {
-            messageDiv.style.color = "#1DB954";
-            messageDiv.textContent = "Canción descargada correctamente.";
-            urlInput.value = "";
-        } else {
-            messageDiv.style.color = "#ff6b6b";
-            messageDiv.textContent = data.detail || "Error al descargar la canción.";
+        if (!response.ok) {
+            let errorMessage = "Error en el servidor";
+            try {
+                const errorJson = await response.json();
+                errorMessage = errorJson.detail || errorMessage;
+            } catch (e) {
+                errorMessage = `Error ${response.status}`;
+            }
+            throw new Error(errorMessage);
         }
+
+        const blob = await response.blob();
+        let filename = "cancion.mp3";
+        const disposition = response.headers.get('Content-Disposition');
+
+        if (disposition) {
+            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            const matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1]) {
+                filename = decodeURIComponent(matches[1].replace(/['"]/g, ''));
+            }
+        }
+
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+
+        setTimeout(() => {
+            link.remove();
+            window.URL.revokeObjectURL(downloadUrl);
+        }, 100);
+
+        messageDiv.style.color = "#1DB954";
+        messageDiv.textContent = "¡Descarga completada!";
+        urlInput.value = "";
 
     } catch (error) {
         console.error(error);
         messageDiv.style.color = "#ff6b6b";
-        messageDiv.textContent = "Error de conexión con el servidor.";
+        messageDiv.textContent = error.message;
     }
 }
