@@ -16,7 +16,6 @@ from user import User
 from song import Song
 from genre import Genre
 
-# --- CONFIGURACIÓN ---
 app = FastAPI()
 login_service = Login()
 
@@ -29,7 +28,6 @@ app.mount("/media", StaticFiles(directory=MEDIA_DIR), name="media")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
-# --- BASE DE DATOS TEMPORAL ---
 songs = [
     Song("99999999-Acid Blood", "3:31", "2020-16-12", Genre.TECHNO),
     Song("Aitana-Los Angeles", "2:38", "2024-01-04", Genre.POP),
@@ -65,13 +63,10 @@ songs = [
 ]
 
 
-# --- MODELOS ---
 class UserAuth(BaseModel):
     username: str
     password: str
 
-
-# --- UTILIDADES Y DEPENDENCIAS ---
 def require_login(request: Request):
     session_user = request.cookies.get(SESSION_COOKIE)
     if not session_user or not any(u.username == session_user for u in login_service.users):
@@ -87,7 +82,6 @@ def cleanup_file(path: str):
             pass
 
 
-# --- RUTAS DE NAVEGACIÓN (GET) ---
 @app.get("/", response_class=HTMLResponse)
 def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request, "mode": "login"})
@@ -113,7 +107,6 @@ def subir_cancion_page(request: Request, user: str = Depends(require_login)):
     return templates.TemplateResponse("subirCancion.html", {"request": request})
 
 
-# --- ENDPOINTS DE DATOS (SONGS) ---
 @app.get("/songs")
 def get_all_songs(user: str = Depends(require_login)):
     songs_list = [song.name for song in songs]
@@ -138,7 +131,6 @@ def play_song(username: str, song_name: str, user: str = Depends(require_login))
     raise HTTPException(status_code=404, detail="Canción no encontrada")
 
 
-# --- AUTH POST ---
 @app.post("/register")
 def register(user: UserAuth):
     if any(u.username == user.username for u in login_service.users):
@@ -155,7 +147,6 @@ def login(user: UserAuth, response: Response):
     raise HTTPException(status_code=401, detail="Credenciales incorrectas")
 
 
-# --- UPLOAD / DOWNLOAD ---
 @app.post("/upload-song")
 async def upload_song(username: str = Form(...), file: UploadFile = File(...), user: str = Depends(require_login)):
     if username != user: raise HTTPException(status_code=401, detail="No autorizado")
